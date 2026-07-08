@@ -22,7 +22,8 @@ the fold and measures how open the seed is.
 
 - **Fold Lab** — type any strand and watch two folders shape it side by side. Each fold has a
   **2D shape** view (fits the box, no scrolling), a rotatable **3D** view, and an **Arc** view.
-- **Guide Analyzer** — paste a guide; see if its seed stays open, plus design flags.
+- **Guide Analyzer** — paste a guide; see if its seed stays open, design flags, and a
+  **neural-net predicted efficiency**.
 - **Dataset** — 881 real guides; does an open seed go with better editing? (see finding below).
 - **Check our work** — accuracy of our Nussinov and Zuker vs known real shapes **and vs ViennaRNA**
   (the standard tool), plus a head-to-head of our Zuker against ViennaRNA on real guides.
@@ -66,10 +67,24 @@ depends on many factors. Folding only the bare spacer hides it almost entirely
 (ρ ≈ 0.03): the scaffold is what pairs with the seed, so you have to fold the full guide.
 That "fold the whole thing, not just the spacer" point is the project's small real finding.
 
+## The neural network
+
+The Guide Analyzer includes a small neural network (2 layers, ~1,000 weights) trained on the 881 real
+guides (`scripts/train_model.py`). Its inputs are the letter at each position, GC content, and the seed
+openness from our own folder. On held-out guides it reaches **Spearman ρ ≈ 0.48** — moderately useful, and
+well above using openness alone (ρ ≈ 0.16). The weights are exported to `public/data/model.json` and the
+forward pass runs in plain TypeScript, so it works live on the static site.
+
+## Accuracy vs ViennaRNA
+
+With an explicit **multiloop** energy term, our Zuker folder now matches ViennaRNA (F1 = 1.00) on all the
+reference shapes, including the tRNA cloverleaf. On 30 real guides, our Zuker agrees with ViennaRNA on ~70%
+of base pairs and the ΔG energies correlate r ≈ 0.83. See the "Check our work" tab.
+
 ## Honest notes
 
-- The Zuker folder uses a **simplified** energy model (not the full lab-measured set),
-  which is exactly why we compare it to ViennaRNA and to known shapes.
+- The Zuker folder uses a **simplified** energy model (approximate Turner-style values), which is why we
+  compare it to ViennaRNA and to known shapes — and it now handles multiloops.
 - Seed openness in the Dataset tab is precomputed by our Nussinov folder (code in
   `src/engine/`) so the page loads fast; single guides are folded live everywhere else.
 

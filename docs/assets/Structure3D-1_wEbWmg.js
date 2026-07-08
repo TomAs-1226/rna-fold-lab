@@ -1,4 +1,4 @@
-import{r as Ia,l as Il,j as Ul}from"./index-C5J9AK7f.js";/**
+import{r as Ia,l as Il,j as Ul}from"./index-KGw3fVZp.js";/**
  * @license
  * Copyright 2010-2026 Three.js Authors
  * SPDX-License-Identifier: MIT

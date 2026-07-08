@@ -41,5 +41,9 @@ export function internalEnergy(unpaired: number): number {
   return 1.7 + 1.25 * Math.log(unpaired);
 }
 
-// Kept for reference; the simplified model does not add an explicit multiloop cost.
-export const MULTILOOP_PENALTY = 3.4;
+// Multiloop cost, in the standard affine form:
+//   total = ML_INIT (for opening the multiloop) + ML_BRANCH per stem + ML_UNPAIRED per free base.
+// These let the Zuker folder build junctions like the tRNA cloverleaf.
+export const ML_INIT = 3.4;
+export const ML_BRANCH = 0.4;
+export const ML_UNPAIRED = 0.0;

@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { analyzeGuide, SEED_LENGTH, type Algo } from "../engine";
+import { loadGuideModel, predictEfficiency, type GuideModel } from "../lib/model";
 import { Card, CardHead, Badge, Stat, Note, Button, Segmented } from "../components/ui/kit";
 import { FoldView } from "../components/FoldView";
 import { DotBracket } from "../components/DotBracket";
 import { Gauge } from "../components/Gauge";
-import { Target, AlertTriangle } from "lucide-react";
+import { Target, AlertTriangle, BrainCircuit } from "lucide-react";
 
 const EXAMPLES = [
   { label: "Low GC", seq: "AGAAUGAAAGAUGAAAGAUA" },
@@ -25,6 +26,12 @@ export function GuideAnalyzer() {
       return { a: null, error: (e as Error).message };
     }
   }, [spacer, algo, scaffold]);
+
+  const [model, setModel] = useState<GuideModel | null>(null);
+  useEffect(() => {
+    loadGuideModel(import.meta.env.BASE_URL).then(setModel);
+  }, []);
+  const pred = useMemo(() => (model ? predictEfficiency(model, spacer) : null), [model, spacer]);
 
   const seedStartInFull = a ? Math.max(0, a.spacer.length - SEED_LENGTH) : 0;
 
@@ -113,6 +120,28 @@ export function GuideAnalyzer() {
             </div>
           </Card>
         </div>
+      ) : null}
+
+      {pred && model ? (
+        <Card>
+          <CardHead title="Neural-net efficiency prediction" sub="a small model we trained on real guides" icon={<BrainCircuit size={18} />} />
+          <div className="grid gap-5 p-5 pt-3 lg:grid-cols-2">
+            <div className="space-y-3">
+              <Gauge value={pred.value} label="Predicted editing efficiency" />
+              <div className="flex flex-wrap gap-2">
+                <Badge tone="indigo">test accuracy ρ = {model.meta.testSpearman}</Badge>
+                <Badge tone="mut">{model.meta.params.toLocaleString()} weights</Badge>
+                <Badge tone="mut">{model.meta.trainN} train / {model.meta.testN} test</Badge>
+              </div>
+            </div>
+            <Note tone="indigo">
+              A small neural network (2 layers, {model.meta.hidden} hidden units) trained on {model.meta.trainedOn}. Its
+              inputs are the letter at each position, GC content, and the seed openness from our own folder. On guides it
+              never saw during training it reaches Spearman ρ ≈ {model.meta.testSpearman} — moderately useful, and well
+              above using seed openness alone (ρ ≈ {model.meta.baselineOpennessSpearman}). It runs entirely in your browser.
+            </Note>
+          </div>
+        </Card>
       ) : null}
     </div>
   );
