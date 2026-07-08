@@ -135,10 +135,12 @@ export function GuideAnalyzer() {
               </div>
             </div>
             <Note tone="indigo">
-              A small neural network (2 layers, {model.meta.hidden} hidden units) trained on {model.meta.trainedOn}. Its
-              inputs are the letter at each position, GC content, and the seed openness from our own folder. On guides it
-              never saw during training it reaches Spearman ρ ≈ {model.meta.testSpearman} — moderately useful, and well
-              above using seed openness alone (ρ ≈ {model.meta.baselineOpennessSpearman}). It runs entirely in your browser.
+              A small neural network ({model.meta.hidden} hidden units, {model.meta.params.toLocaleString()} weights)
+              trained on {model.meta.trainedOn}. Inputs: the letter at each position, each neighbouring pair, GC content,
+              and the seed openness from our own folder. On {model.meta.testN} held-out guides it reaches Spearman ρ ≈{" "}
+              {model.meta.testSpearman} — modest but real: it beats GC alone (ρ ≈ {model.meta.baselineGcSpearman}), and
+              adding our folding feature nudges it up from ρ ≈ {model.meta.testSpearmanNoOpenness}. Predicting efficiency
+              from the 20-letter spacer alone is genuinely hard, so treat this as a rough guide. It runs in your browser.
             </Note>
           </div>
         </Card>

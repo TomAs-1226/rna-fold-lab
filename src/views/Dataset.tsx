@@ -65,9 +65,9 @@ export function Dataset() {
       </div>
 
       <Note tone="indigo">
-        <strong>Real data.</strong> {guides ? guides.length : "…"} guides with lab-measured editing
-        efficiency (genes {geneList || "…"}). Source: {source || "…"}. Seed openness was computed by
-        our Nussinov folder on the full guide (spacer + scaffold).
+        <strong>Real data.</strong> {guides ? guides.length.toLocaleString() : "…"} guides with lab-measured
+        editing efficiency, pooled from two published screens. Source: {source || "…"}. Seed openness was
+        computed by our own folder on the full guide (spacer + scaffold).
       </Note>
 
       {err ? <p className="text-danger">{err}</p> : null}
@@ -106,17 +106,18 @@ export function Dataset() {
             <Stat label="Openness vs efficiency" value={`ρ = ${rOpen.toFixed(2)}`} hint={describeCorrelation(rOpen)} tone={opennessColor(rOpen > 0 ? 0.8 : 0.3)} />
             <Stat label="GC% vs efficiency" value={`ρ = ${rGc.toFixed(2)}`} hint={describeCorrelation(rGc)} />
             <Note>
-              A weak <strong>positive</strong> link: more-open seeds edit a little better, the
-              direction biology predicts. It is weak because efficiency depends on many things, not
-              structure alone. Folding only the bare spacer hides this almost entirely (ρ ≈ 0.03) —
-              the scaffold is what pairs with the seed, so you have to fold the whole guide.
+              On this larger, more diverse dataset the link is essentially <strong>flat</strong> (ρ ≈{" "}
+              {rOpen.toFixed(2)}): seed openness on its own does not predict efficiency here. The weak positive
+              hint we saw on a smaller set did not hold up — a good reminder that weak effects often do not
+              replicate. Efficiency depends mostly on the sequence itself, which the neural network (in the
+              Guide Analyzer) picks up.
             </Note>
           </div>
         </Card>
       </div>
 
       <Card>
-        <CardHead title="Every guide" sub={`${guides?.length ?? 0} real guides · seed openness from our folder`} />
+        <CardHead title="Every guide" sub={`${(guides?.length ?? 0).toLocaleString()} real guides · showing first 250 · seed openness from our folder`} />
         <div className="max-h-80 overflow-auto p-5 pt-3">
           <table className="w-full text-sm">
             <thead className="sticky top-0 bg-surface text-left text-xs uppercase tracking-wide text-mut">
@@ -129,7 +130,7 @@ export function Dataset() {
               </tr>
             </thead>
             <tbody className="font-mono tabular-nums">
-              {(guides ?? []).map((g) => {
+              {(guides ?? []).slice(0, 250).map((g) => {
                 const open = Math.round(g.seedOpenness * 100);
                 return (
                   <tr key={g.id} className="border-t border-line/60">

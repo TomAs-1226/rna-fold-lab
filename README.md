@@ -58,22 +58,25 @@ Settings → Pages → Source: *Deploy from a branch* → Branch: `main`, Folder
 
 ## What we found (real data)
 
-The Dataset tab uses **881 real guides** with lab-measured editing efficiency (Doench
-et al. 2014, human genes CD13/CD15/CD33, via the CRISPOR benchmark of Haeussler et al.
-2016 — `scripts/fetch_real_dataset.mjs`). Folding the **whole guide** (spacer + scaffold)
-with our own code, seed openness shows a **weak positive** link with efficiency
-(Spearman ρ ≈ +0.12) — the direction biology predicts, but weak, because efficiency
-depends on many factors. Folding only the bare spacer hides it almost entirely
-(ρ ≈ 0.03): the scaffold is what pairs with the seed, so you have to fold the full guide.
-That "fold the whole thing, not just the spacer" point is the project's small real finding.
+The Dataset tab uses **4,685 real guides** with lab-measured efficiency, pooled from two
+published screens (Doench et al. 2014 + 2016, via the CRISPOR benchmark of Haeussler et al.
+2016 — `scripts/fetch_real_dataset.mjs`; each activity is a within-screen percentile).
+
+The honest finding: on this larger, diverse dataset, **seed openness on its own does not
+predict efficiency** (Spearman ρ ≈ 0.01). A weak positive hint (ρ ≈ +0.12) that showed up on
+a smaller 3-gene subset **did not replicate** — a good, real reminder that weak effects often
+don't hold up on more data. Efficiency is driven mostly by the sequence itself.
 
 ## The neural network
 
-The Guide Analyzer includes a small neural network (2 layers, ~1,000 weights) trained on the 881 real
-guides (`scripts/train_model.py`). Its inputs are the letter at each position, GC content, and the seed
-openness from our own folder. On held-out guides it reaches **Spearman ρ ≈ 0.48** — moderately useful, and
-well above using openness alone (ρ ≈ 0.16). The weights are exported to `public/data/model.json` and the
-forward pass runs in plain TypeScript, so it works live on the static site.
+The Guide Analyzer includes a small neural network (2 layers, ~12k weights) trained on the 4,685 real guides
+(`scripts/train_model.py`, Adam + early stopping, honest 60/20/20 train/val/test split). Inputs: position
+one-hot, dinucleotide one-hot, GC, and the seed openness from our own folder. On held-out guides it reaches
+**Spearman ρ ≈ 0.18** — modest but real: it beats GC alone (ρ ≈ 0.11), and an ablation shows our folding
+feature adds a little (ρ 0.17 → 0.18). Predicting efficiency from the 20-nt spacer alone is genuinely hard
+(the strongest signal is PAM-proximal genomic context a pasted guide doesn't carry), so it's a rough guide.
+The weights export to `public/data/model.json` and the forward pass runs in plain TypeScript — live on the
+static site, no ML runtime.
 
 ## Accuracy vs ViennaRNA
 
