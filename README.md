@@ -20,10 +20,12 @@ the fold and measures how open the seed is.
 
 ## What's inside
 
-- **Fold Lab** — type any strand and watch two folders shape it side by side.
+- **Fold Lab** — type any strand and watch two folders shape it side by side. Each fold has a
+  **2D shape** view (fits the box, no scrolling), a rotatable **3D** view, and an **Arc** view.
 - **Guide Analyzer** — paste a guide; see if its seed stays open, plus design flags.
-- **Dataset** — check many guides at once for the "open seed works better" pattern.
-- **Check our work** — test both folders against RNAs whose real shape is known.
+- **Dataset** — 881 real guides; does an open seed go with better editing? (see finding below).
+- **Check our work** — accuracy of our Nussinov and Zuker vs known real shapes **and vs ViennaRNA**
+  (the standard tool), plus a head-to-head of our Zuker against ViennaRNA on real guides.
 - **Learn** — the whole idea in small, plain steps.
 
 ## Two folders, on purpose

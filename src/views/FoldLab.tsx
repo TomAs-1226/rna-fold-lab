@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { nussinov, zuker, agreementPairs, type FoldResult } from "../engine";
 import { Card, CardHead, Badge, Stat, Note, Button } from "../components/ui/kit";
-import { ArcDiagram } from "../components/ArcDiagram";
+import { FoldView } from "../components/FoldView";
 import { DotBracket } from "../components/DotBracket";
 import { DPMatrix } from "../components/DPMatrix";
 import { Dna, GitCompareArrows } from "lucide-react";
@@ -34,7 +34,7 @@ function ResultCard({ result, kind }: { result: FoldResult | null; kind: "nussin
                 <Badge tone="mut">no energy (counts pairs)</Badge>
               )}
             </div>
-            <ArcDiagram sequence={result.sequence} pairs={result.pairs} />
+            <FoldView sequence={result.sequence} pairs={result.pairs} />
             <div className="mt-3">
               <DotBracket sequence={result.sequence} structure={result.structure} />
             </div>

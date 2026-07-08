@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { analyzeGuide, SEED_LENGTH, type Algo } from "../engine";
 import { Card, CardHead, Badge, Stat, Note, Button, Segmented } from "../components/ui/kit";
-import { ArcDiagram } from "../components/ArcDiagram";
+import { FoldView } from "../components/FoldView";
 import { DotBracket } from "../components/DotBracket";
 import { Gauge } from "../components/Gauge";
 import { Target, AlertTriangle } from "lucide-react";
@@ -99,7 +99,7 @@ export function GuideAnalyzer() {
           <Card className="lg:col-span-2">
             <CardHead title="How the guide folds" sub={scaffold ? "spacer + scaffold tail — seed bases in amber" : "spacer only — seed bases in amber"} />
             <div className="p-5 pt-3">
-              <ArcDiagram sequence={a.full} pairs={foldPairs(a.structure)} seedStart={seedStartInFull} />
+              <FoldView sequence={a.full} pairs={foldPairs(a.structure)} seedStart={seedStartInFull} />
               <div className="mt-3">
                 <div className="mb-1.5 text-sm text-mut">Just the spacer:</div>
                 <DotBracket sequence={a.spacer} structure={a.spacerStructure} seedStart={seedStartInFull} />

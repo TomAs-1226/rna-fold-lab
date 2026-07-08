@@ -53,7 +53,8 @@ export default function App() {
         <footer className="mx-auto mt-16 max-w-6xl border-t border-line pt-6 text-xs text-mut">
           <p>
             Built for the Pre-College computational biology project. Folding runs entirely in your
-            browser. Guide-activity numbers in the Dataset tab are example data, not lab measurements.
+            browser. The Dataset tab uses real measured guide efficiencies (Doench 2014, via CRISPOR);
+            the "Check our work" tab compares our folders against ViennaRNA.
           </p>
         </footer>
       </main>
