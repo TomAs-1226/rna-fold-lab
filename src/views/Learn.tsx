@@ -70,6 +70,24 @@ export function Learn() {
         <p><strong className="text-ink">Check our work</strong> — see how close our programs get to real, known shapes.</p>
       </Block>
 
+      <Block n={7} title="Is this AlphaFold?">
+        <p>Not quite — and the difference is worth knowing.</p>
+        <p>
+          <strong className="text-ink">AlphaFold</strong> predicts the full <strong className="text-ink">3D</strong>{" "}
+          shape of proteins with a giant trained AI model. That is a hard problem that needs powerful computers and
+          takes minutes.
+        </p>
+        <p>
+          We predict RNA <strong className="text-ink">secondary structure</strong> — only which letters pair with
+          which. That is a solved problem with fast, exact algorithms from the 1980s, which is why our folds finish in
+          a few milliseconds.
+        </p>
+        <p>
+          The 3D view on this site simply arranges that 2D structure in space so you can look at it. It is not a
+          physics-based 3D model of the real molecule.
+        </p>
+      </Block>
+
       <Note>
         Want the deeper version? The full write-up and the two original papers (Nussinov 1980, Zuker &amp; Stiegler 1981) are listed in the project&rsquo;s reading list.
       </Note>

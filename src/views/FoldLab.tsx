@@ -51,16 +51,15 @@ export function FoldLab() {
   const [seq, setSeq] = useState("GGGGAAAACCCCUUUUGGGGAAAACCCC");
   const [wobble, setWobble] = useState(true);
 
-  const { nuss, zuk, error } = useMemo(() => {
+  const { nuss, zuk, error, ms } = useMemo(() => {
     try {
-      if (!seq.trim()) return { nuss: null, zuk: null, error: "" };
-      return {
-        nuss: nussinov(seq, { allowWobble: wobble }),
-        zuk: zuker(seq, { allowWobble: wobble }),
-        error: "",
-      };
+      if (!seq.trim()) return { nuss: null, zuk: null, error: "", ms: 0 };
+      const t0 = performance.now();
+      const nu = nussinov(seq, { allowWobble: wobble });
+      const zu = zuker(seq, { allowWobble: wobble });
+      return { nuss: nu, zuk: zu, error: "", ms: performance.now() - t0 };
     } catch (e) {
-      return { nuss: null, zuk: null, error: (e as Error).message };
+      return { nuss: null, zuk: null, error: (e as Error).message, ms: 0 };
     }
   }, [seq, wobble]);
 
@@ -103,6 +102,14 @@ export function FoldLab() {
             </label>
           </div>
           {error ? <p className="mt-2 text-sm text-danger">{error}</p> : null}
+          {nuss && zuk ? (
+            <p className="mt-2 text-xs text-mut">
+              Both algorithms folded {nuss.sequence.length} nt in ~{ms < 1 ? ms.toFixed(2) : ms.toFixed(1)} ms. It's
+              this fast because we predict <span className="text-ink">secondary structure</span> — which bases pair —
+              with exact dynamic programming. That's a different (much easier) problem than a 3D atomic model like
+              AlphaFold.
+            </p>
+          ) : null}
         </div>
       </Card>
 
