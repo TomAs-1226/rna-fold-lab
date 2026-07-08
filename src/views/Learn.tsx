@@ -66,6 +66,7 @@ export function Learn() {
       <Block n={6} title="How to use this site">
         <p><strong className="text-ink">Fold Lab</strong> — type any strand and watch both programs fold it.</p>
         <p><strong className="text-ink">Guide Analyzer</strong> — paste a guide and see if its seed stays open.</p>
+        <p><strong className="text-ink">Designer</strong> — paste a target DNA and get a ranked list of guide options.</p>
         <p><strong className="text-ink">Dataset</strong> — check many guides at once for the open-seed pattern.</p>
         <p><strong className="text-ink">Check our work</strong> — see how close our programs get to real, known shapes.</p>
       </Block>

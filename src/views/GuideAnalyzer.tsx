@@ -13,8 +13,11 @@ const EXAMPLES = [
   { label: "Has TTTT", seq: "GACUUUUACGUUAGCAUGAA" },
 ];
 
-export function GuideAnalyzer() {
-  const [spacer, setSpacer] = useState("CUUAAGGGUUAAGUAAGUGU");
+export function GuideAnalyzer({ initialSpacer }: { initialSpacer?: string }) {
+  const [spacer, setSpacer] = useState(initialSpacer ?? "CUUAAGGGUUAAGUAAGUGU");
+  useEffect(() => {
+    if (initialSpacer) setSpacer(initialSpacer);
+  }, [initialSpacer]);
   const [algo, setAlgo] = useState<Algo>("zuker");
   const [scaffold, setScaffold] = useState(true);
 

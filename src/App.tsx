@@ -1,23 +1,46 @@
 import { useState } from "react";
 import { FoldLab } from "./views/FoldLab";
 import { GuideAnalyzer } from "./views/GuideAnalyzer";
+import { Designer } from "./views/Designer";
 import { Dataset } from "./views/Dataset";
 import { Validate } from "./views/Validate";
 import { Learn } from "./views/Learn";
 import { cn } from "./lib/utils";
-import { FlaskConical, Target, ScatterChart, ShieldCheck, BookOpen, Dna } from "lucide-react";
+import { FlaskConical, Target, Crosshair, ScatterChart, ShieldCheck, BookOpen, Dna } from "lucide-react";
 
 const NAV = [
-  { id: "fold", label: "Fold Lab", icon: FlaskConical, view: <FoldLab /> },
-  { id: "guide", label: "Guide Analyzer", icon: Target, view: <GuideAnalyzer /> },
-  { id: "data", label: "Dataset", icon: ScatterChart, view: <Dataset /> },
-  { id: "check", label: "Check our work", icon: ShieldCheck, view: <Validate /> },
-  { id: "learn", label: "Learn", icon: BookOpen, view: <Learn /> },
+  { id: "fold", label: "Fold Lab", icon: FlaskConical },
+  { id: "guide", label: "Guide Analyzer", icon: Target },
+  { id: "design", label: "Designer", icon: Crosshair },
+  { id: "data", label: "Dataset", icon: ScatterChart },
+  { id: "check", label: "Check our work", icon: ShieldCheck },
+  { id: "learn", label: "Learn", icon: BookOpen },
 ] as const;
 
 export default function App() {
   const [active, setActive] = useState<(typeof NAV)[number]["id"]>("fold");
-  const current = NAV.find((n) => n.id === active)!;
+  const [pendingSpacer, setPendingSpacer] = useState<string>();
+  const openGuide = (spacer: string) => {
+    setPendingSpacer(spacer);
+    setActive("guide");
+  };
+
+  const view = () => {
+    switch (active) {
+      case "guide":
+        return <GuideAnalyzer initialSpacer={pendingSpacer} />;
+      case "design":
+        return <Designer onOpen={openGuide} />;
+      case "data":
+        return <Dataset />;
+      case "check":
+        return <Validate />;
+      case "learn":
+        return <Learn />;
+      default:
+        return <FoldLab />;
+    }
+  };
 
   return (
     <div className="min-h-dvh lg:flex">
@@ -49,11 +72,11 @@ export default function App() {
 
       {/* Main */}
       <main className="flex-1 px-4 py-6 sm:px-8 sm:py-10">
-        <div key={active} className="animate-rise">{current.view}</div>
+        <div key={active} className="animate-rise">{view()}</div>
         <footer className="mx-auto mt-16 max-w-6xl border-t border-line pt-6 text-xs text-mut">
           <p>
             Built for the Pre-College computational biology project. Folding runs entirely in your
-            browser. The Dataset tab uses real measured guide efficiencies (Doench 2014, via CRISPOR);
+            browser. The Dataset tab uses real measured guide efficiencies (Doench 2014+2016, via CRISPOR);
             the "Check our work" tab compares our folders against ViennaRNA.
           </p>
         </footer>
