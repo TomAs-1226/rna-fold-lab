@@ -1,0 +1,8 @@
+node_modules
+dist
+*.local
+.DS_Store
+.vite
+.claude/
+graphify-out/.graphify_*
+graphify-out/cost.json
