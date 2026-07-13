@@ -2,8 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { gcPercent } from "../engine";
 import { findGuides, EXAMPLE_TARGET } from "../lib/guides";
 import { loadGuideModel, predictEfficiency, type GuideModel } from "../lib/model";
+import { downloadCSV } from "../lib/export";
 import { Card, CardHead, Stat, Note, Button, Badge } from "../components/ui/kit";
-import { Crosshair, ArrowUpRight, AlertTriangle } from "lucide-react";
+import { Crosshair, ArrowUpRight, AlertTriangle, Download } from "lucide-react";
 
 interface Scored {
   spacer: string;
@@ -86,7 +87,23 @@ export function Designer({ onOpen }: { onOpen: (spacer: string) => void }) {
           </div>
 
           <Card>
-            <CardHead title="Ranked guides" sub={model ? "sorted by predicted efficiency" : "loading model — sorted by seed openness for now"} icon={<Crosshair size={18} />} />
+            <div className="flex items-start justify-between">
+              <CardHead title="Ranked guides" sub={model ? "sorted by predicted efficiency" : "loading model, sorted by seed openness for now"} icon={<Crosshair size={18} />} />
+              <div className="p-5">
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    downloadCSV(
+                      "crispr_guides.csv",
+                      ["rank", "spacer", "strand", "position", "gc_percent", "seed_openness_pct", "predicted_efficiency_pct", "flags"],
+                      rows.map((r, i) => [i + 1, r.spacer, r.strand, r.position, r.gc.toFixed(0), Math.round(r.openness * 100), r.predEff != null ? Math.round(r.predEff * 100) : "", r.warnings.join(";") || "clean"]),
+                    )
+                  }
+                >
+                  <Download size={14} /> CSV
+                </Button>
+              </div>
+            </div>
             <div className="max-h-[28rem] overflow-auto p-5 pt-3">
               <table className="w-full text-sm">
                 <thead className="sticky top-0 bg-surface text-left text-xs uppercase tracking-wide text-mut">

@@ -4,7 +4,8 @@ import { Card, CardHead, Badge, Stat, Note, Button } from "../components/ui/kit"
 import { FoldView } from "../components/FoldView";
 import { DotBracket } from "../components/DotBracket";
 import { DPMatrix } from "../components/DPMatrix";
-import { Dna, GitCompareArrows } from "lucide-react";
+import { copyText } from "../lib/export";
+import { Dna, GitCompareArrows, Copy } from "lucide-react";
 
 const EXAMPLES = [
   { label: "Hairpin", seq: "GGGGAAAACCCC" },
@@ -16,6 +17,7 @@ const EXAMPLES = [
 function ResultCard({ result, kind }: { result: FoldResult | null; kind: "nussinov" | "zuker" }) {
   const title = kind === "nussinov" ? "Nussinov" : "Zuker";
   const sub = kind === "nussinov" ? "most base pairs" : "most stable (lowest energy)";
+  const [copied, setCopied] = useState(false);
   return (
     <Card>
       <CardHead
@@ -26,13 +28,24 @@ function ResultCard({ result, kind }: { result: FoldResult | null; kind: "nussin
       <div className="p-5 pt-3">
         {result ? (
           <>
-            <div className="mb-3 flex flex-wrap gap-2">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
               <Badge tone="teal">{result.pairs.length} base pairs</Badge>
               {result.energy !== undefined ? (
                 <Badge tone="indigo">{result.energy} kcal/mol</Badge>
               ) : (
                 <Badge tone="mut">no energy (counts pairs)</Badge>
               )}
+              <button
+                onClick={async () => {
+                  if (await copyText(`${result.sequence}\n${result.structure}`)) {
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 1500);
+                  }
+                }}
+                className="ml-auto inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs text-mut hover:bg-surface2 hover:text-teal cursor-pointer"
+              >
+                <Copy size={12} /> {copied ? "copied" : "copy"}
+              </button>
             </div>
             <FoldView sequence={result.sequence} pairs={result.pairs} />
             <div className="mt-3">
